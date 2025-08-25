@@ -5,27 +5,39 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".MessagerActivity">
 
 
     <Button
-        android:id="@+id/btn_one"
-        android:layout_width="200dp"
+        android:id="@+id/btn_msg_increment"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:text="AIDL交互"
-        app:layout_constraintBottom_toTopOf="@id/btn_two"
+        android:layout_marginBottom="30dp"
+        android:text="自增"
+        app:layout_constraintBottom_toTopOf="@id/btn_msg_stop"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
+
     <Button
-        android:id="@+id/btn_two"
-        android:layout_width="200dp"
+        android:id="@+id/btn_msg_stop"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Messager交互"
+        android:layout_marginBottom="30dp"
+        android:text="停止"
+        app:layout_constraintBottom_toTopOf="@id/tv_msg_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_msg_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hello World!"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

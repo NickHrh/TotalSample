@@ -1,18 +1,16 @@
-package com.example.totalsample
+package com.example.totalsample.service
 
 import android.app.Service
 import android.content.Intent
 import android.os.Handler
-import android.os.Handler.Callback
 import android.os.IBinder
-import android.os.IInterface
 import android.os.Looper
 import android.os.Message
-import android.os.Parcel
 import android.os.RemoteCallbackList
-import android.util.Log;
+import android.util.Log
 import android.widget.Toast
-import java.io.FileDescriptor
+import com.example.totalsample.IRemoteService
+import com.example.totalsample.IRemoteServiceCallback
 
 class RemoteService : Service() {
     val TAG = RemoteService::class.simpleName
@@ -20,7 +18,7 @@ class RemoteService : Service() {
     var mValue = 0
     val mCallbackList = RemoteCallbackList<IRemoteServiceCallback>();
 
-    val mHandler = Handler(Looper.getMainLooper(), object : Callback {
+    val mHandler = Handler(Looper.getMainLooper(), object : Handler.Callback {
         override fun handleMessage(msg: Message): Boolean {
             when (msg.what) {
                 msg_what -> {

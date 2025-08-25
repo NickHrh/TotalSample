@@ -12,11 +12,29 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TotalSample"
         tools:targetApi="31">
+
+
+        <activity
+            android:name=".MessagerActivity"
+            android:exported="false" />
+        <activity
+            android:name=".BaseActivity"
+            android:exported="false" />
+        <activity
+            android:name=".IncrementActivity"
+            android:exported="false" />
+
         <service
-            android:name=".RemoteService"
+            android:name=".service.RemoteService"
             android:enabled="true"
             android:exported="true"
-            android:process=":remote"/>
+            android:process=":remote" />
+
+        <service
+            android:name=".service.MessagerService"
+            android:enabled="true"
+            android:exported="true"
+            android:process=":messager" />
 
         <activity
             android:name=".MainActivity"
@@ -27,7 +45,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
     </application>
 
 </manifest>
