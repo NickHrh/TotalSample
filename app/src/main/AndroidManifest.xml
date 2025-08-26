@@ -15,7 +15,7 @@
 
 
         <activity
-            android:name=".MessagerActivity"
+            android:name=".MessengerActivity"
             android:exported="false" />
         <activity
             android:name=".BaseActivity"
@@ -31,7 +31,7 @@
             android:process=":remote" />
 
         <service
-            android:name=".service.MessagerService"
+            android:name=".service.MessengerService"
             android:enabled="true"
             android:exported="true"
             android:process=":messager" />

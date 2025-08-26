@@ -10,6 +10,7 @@ import android.os.Handler.Callback
 import android.os.IBinder
 import android.os.Looper
 import android.os.Message
+import android.util.Log
 import android.widget.Toast
 import com.example.totalsample.databinding.ActivityIncrementBinding
 import com.example.totalsample.service.RemoteService
@@ -17,6 +18,7 @@ import com.example.totalsample.service.RemoteService
 class IncrementActivity : BaseActivity<ActivityIncrementBinding>() {
     val bump_msg = 1
     var mIsBound = false
+    val TAG = IncrementActivity::class.simpleName
     private var mService: IRemoteService? = null
 
     val mHandler = Handler(Looper.getMainLooper(), object : Callback {
@@ -39,6 +41,7 @@ class IncrementActivity : BaseActivity<ActivityIncrementBinding>() {
 
     val serviceCollection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+            Log.i(TAG, "---onServiceConnected")
             vBinding.tvContent.text = "Attached!!!"
             mService = IRemoteService.Stub.asInterface(service)
             mService?.registerCallback(mCallback)
@@ -49,6 +52,8 @@ class IncrementActivity : BaseActivity<ActivityIncrementBinding>() {
         }
 
         override fun onServiceDisconnected(name: ComponentName?) {
+            Log.i(TAG, "---onServiceDisconnected")
+
             mService = null
             vBinding.tvContent.text = "disconnected!!!"
             Toast.makeText(this@IncrementActivity, "remote service Disconnected", Toast.LENGTH_SHORT)

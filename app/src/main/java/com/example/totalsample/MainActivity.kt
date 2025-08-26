@@ -2,8 +2,6 @@ package com.example.totalsample
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import com.example.totalsample.databinding.ActivityIncrementBinding
 import com.example.totalsample.databinding.ActivityMainBinding
 
 class MainActivity : BaseActivity<ActivityMainBinding>() {
@@ -16,7 +14,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
             }
 
             btnTwo.setOnClickListener {
-                startActivity(Intent(this@MainActivity, MessagerActivity::class.java))
+                startActivity(Intent(this@MainActivity, MessengerActivity::class.java))
             }
         }
 
