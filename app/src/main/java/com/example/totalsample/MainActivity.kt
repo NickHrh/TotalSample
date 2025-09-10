@@ -2,6 +2,7 @@ package com.example.totalsample
 
 import android.content.Intent
 import android.os.Bundle
+import com.example.totalsample.custom.view.CustomViewActivity
 import com.example.totalsample.databinding.ActivityMainBinding
 
 class MainActivity : BaseActivity<ActivityMainBinding>() {
@@ -15,6 +16,10 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
 
             btnTwo.setOnClickListener {
                 startActivity(Intent(this@MainActivity, MessengerActivity::class.java))
+            }
+
+            btnThree.setOnClickListener {
+                startActivity(Intent(this@MainActivity, CustomViewActivity::class.java))
             }
         }
 
