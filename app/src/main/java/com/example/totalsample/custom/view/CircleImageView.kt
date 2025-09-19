@@ -61,19 +61,20 @@ class CircleImageView : AppCompatImageView {
             return
         }
 
-        val diameter =
-            (width - paddingLeft - paddingRight)
-                .coerceAtMost(height - paddingTop - paddingBottom)
+        //让圆形的直径等于高度
+        val diameter = (width - paddingLeft - paddingRight)
+            .coerceAtMost(height - paddingTop - paddingBottom)
         val radius = diameter / 2f
+        //中心点坐标
         val centerX = width / 2f
         val centerY = height / 2f
 
         if (shadowRadius > 0) {
-            setLayerType(LAYER_TYPE_SOFTWARE, shadowPaint)
+            setLayerType(LAYER_TYPE_SOFTWARE, null)
             shadowPaint.setShadowLayer(shadowRadius, 0f, 0f, shadowColor)
             canvas.drawCircle(centerX, centerY, radius, shadowPaint)
         }
-
+        //离屏缓存
         val saveCount = canvas.saveLayer(0f, 0f, width.toFloat(), height.toFloat(), layerPaint)
 
         paint.reset()
@@ -117,7 +118,6 @@ class CircleImageView : AppCompatImageView {
             canvas.drawCircle(centerX, centerY, radius - borderWidth / 2, borderPaint)
         }
     }
-
 
     private fun getBitmapFromDrawable(drawable: Drawable, w: Int, h: Int): Bitmap {
         if (!drawableChanged && cachedBitmap != null
