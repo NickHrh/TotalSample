@@ -7,6 +7,7 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffXfermode
+import android.graphics.Rect
 import android.graphics.RectF
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
@@ -17,7 +18,6 @@ class CircleImageView : AppCompatImageView {
 
     private var borderWidth = 0f
     private var borderColor = Color.WHITE
-
     private var shadowRadius = 0f
     private var shadowColor = Color.TRANSPARENT
 
@@ -30,6 +30,13 @@ class CircleImageView : AppCompatImageView {
     private val layerPaint = Paint(Paint.ANTI_ALIAS_FLAG)
 
     val rect = RectF()
+    val srcRect = Rect()
+    val destRect = RectF()
+
+    private var drawableChanged = true
+    private var cachedBitmap: Bitmap? = null
+
+    val srcInMode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)
 
     constructor(ctx: Context) : super(ctx) {
         init(null)
@@ -48,8 +55,6 @@ class CircleImageView : AppCompatImageView {
     }
 
 
-    val srcInMode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)
-
     override fun onDraw(canvas: Canvas) {
         if (drawable == null) {
             super.onDraw(canvas)
@@ -64,7 +69,8 @@ class CircleImageView : AppCompatImageView {
         val centerY = height / 2f
 
         if (shadowRadius > 0) {
-            shadowPaint.color = shadowColor
+            setLayerType(LAYER_TYPE_SOFTWARE, shadowPaint)
+            shadowPaint.setShadowLayer(shadowRadius, 0f, 0f, shadowColor)
             canvas.drawCircle(centerX, centerY, radius, shadowPaint)
         }
 
@@ -77,8 +83,28 @@ class CircleImageView : AppCompatImageView {
 
         paint.xfermode = srcInMode
 
-        val bmp = drawableToBitmap(drawable, diameter, diameter)
-        canvas.drawBitmap(bmp, centerX - radius, centerY - radius, paint)
+        val bmp = getBitmapFromDrawable(drawable, diameter, diameter)
+
+        srcRect.set(
+            0,
+            0,
+            bmp.width,
+            bmp.height
+        )
+
+        destRect.set(
+            centerX - radius,
+            centerY - radius,
+            centerX + radius,
+            centerY + radius
+        )
+
+        canvas.drawBitmap(
+            bmp,
+            srcRect,
+            destRect,
+            paint
+        )
 
         paint.xfermode = null
         canvas.restoreToCount(saveCount)
@@ -92,16 +118,31 @@ class CircleImageView : AppCompatImageView {
         }
     }
 
-    private fun drawableToBitmap(drawable: Drawable, w: Int, h: Int): Bitmap {
+
+    private fun getBitmapFromDrawable(drawable: Drawable, w: Int, h: Int): Bitmap {
+        if (!drawableChanged && cachedBitmap != null
+            && cachedBitmap?.width == w && cachedBitmap?.height == h
+        ) {
+            return cachedBitmap!!
+        }
+
         val bmp = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
-        val c = Canvas(bmp)
+        val canvas = Canvas(bmp)
         drawable.setBounds(0, 0, w, h)
-        drawable.draw(c)
+        drawable.draw(canvas)
+        cachedBitmap = bmp
+        drawableChanged = false
         return bmp
+    }
+
+    override fun invalidateDrawable(dr: Drawable) {
+        super.invalidateDrawable(dr)
+        drawableChanged = true
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
+        drawableChanged = true
         rect.set(0f, 0f, w.toFloat(), h.toFloat())
     }
 
