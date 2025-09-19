@@ -7,4 +7,19 @@
     android:layout_height="match_parent"
     tools:context=".custom.view.CustomViewActivity">
 
+    <com.example.totalsample.custom.view.CircleImageView
+        android:id="@+id/circle_iv"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:src="@mipmap/picak"
+        app:borderColor="@android:color/holo_blue_bright"
+        app:borderWidth="3dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:shadowColor="#80000000"
+        app:shadowRadius="8dp" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
