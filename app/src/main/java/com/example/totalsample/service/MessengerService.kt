@@ -10,32 +10,33 @@ import android.os.Message
 import android.os.Messenger
 
 class MessengerService : Service() {
-    val messengerHandler = Handler(Looper.getMainLooper(), object : Handler.Callback {
-        override fun handleMessage(msg: Message): Boolean {
-            when (msg.what) {
-                1 -> {
-                    val bundler = msg.data
-                    var value = bundler?.getInt("C2S", 0) ?: 0
-                    val clientMsger = msg.replyTo
-                    val sendMsg2Client = Message.obtain()
-                    sendMsg2Client.what = 2
-                    sendMsg2Client.data = Bundle().also {
-                        it.putInt("S2C", ++value)
+    val messengerHandler = Handler(
+        Looper.getMainLooper(),
+        object : Handler.Callback {
+            override fun handleMessage(msg: Message): Boolean {
+                when (msg.what) {
+                    1 -> {
+                        val bundler = msg.data
+                        var value = bundler?.getInt("C2S", 0) ?: 0
+                        val clientMsger = msg.replyTo
+                        val sendMsg2Client = Message.obtain()
+                        sendMsg2Client.what = 2
+                        sendMsg2Client.data = Bundle().also {
+                            it.putInt("S2C", ++value)
+                        }
+                        clientMsger.send(sendMsg2Client)
                     }
-                    clientMsger.send(sendMsg2Client)
-                }
 
-                else -> {}
+                    else -> {}
+                }
+                return true
             }
-            return true
         }
-    })
+    )
 
     val messenger = Messenger(messengerHandler)
 
-    override fun onBind(intent: Intent): IBinder {
-        return messenger.binder
-    }
+    override fun onBind(intent: Intent): IBinder = messenger.binder
 
     override fun onUnbind(intent: Intent?): Boolean {
         messengerHandler.removeCallbacksAndMessages(null)

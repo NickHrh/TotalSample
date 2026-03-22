@@ -21,7 +21,6 @@ class CircleImageView : AppCompatImageView {
     private var shadowRadius = 0f
     private var shadowColor = Color.TRANSPARENT
 
-
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val borderPaint = Paint(Paint.ANTI_ALIAS_FLAG)
     val shadowPaint = Paint(Paint.ANTI_ALIAS_FLAG)
@@ -54,18 +53,17 @@ class CircleImageView : AppCompatImageView {
         init(attrs)
     }
 
-
     override fun onDraw(canvas: Canvas) {
         if (drawable == null) {
             super.onDraw(canvas)
             return
         }
 
-        //让圆形的直径等于高度
+        // 让圆形的直径等于高度
         val diameter = (width - paddingLeft - paddingRight)
             .coerceAtMost(height - paddingTop - paddingBottom)
         val radius = diameter / 2f
-        //中心点坐标
+        // 中心点坐标
         val centerX = width / 2f
         val centerY = height / 2f
 
@@ -74,7 +72,7 @@ class CircleImageView : AppCompatImageView {
             shadowPaint.setShadowLayer(shadowRadius, 0f, 0f, shadowColor)
             canvas.drawCircle(centerX, centerY, radius, shadowPaint)
         }
-        //离屏缓存
+        // 离屏缓存
         val saveCount = canvas.saveLayer(0f, 0f, width.toFloat(), height.toFloat(), layerPaint)
 
         paint.reset()
@@ -120,8 +118,8 @@ class CircleImageView : AppCompatImageView {
     }
 
     private fun getBitmapFromDrawable(drawable: Drawable, w: Int, h: Int): Bitmap {
-        if (!drawableChanged && cachedBitmap != null
-            && cachedBitmap?.width == w && cachedBitmap?.height == h
+        if (!drawableChanged && cachedBitmap != null &&
+            cachedBitmap?.width == w && cachedBitmap?.height == h
         ) {
             return cachedBitmap!!
         }
@@ -147,7 +145,6 @@ class CircleImageView : AppCompatImageView {
     }
 
     private fun init(attrs: AttributeSet?) {
-
         scaleType = ScaleType.CENTER_CROP
         val typeArray = context.obtainStyledAttributes(attrs, R.styleable.CircleImageView)
         borderWidth = typeArray.getDimension(R.styleable.CircleImageView_borderWidth, 0f)

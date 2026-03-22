@@ -13,34 +13,37 @@ import com.example.totalsample.IRemoteService
 import com.example.totalsample.IRemoteServiceCallback
 
 class RemoteService : Service() {
-    val TAG = RemoteService::class.simpleName
-    val msg_what = 66
+    val tag = RemoteService::class.simpleName
+    val msgWhat = 66
     var mValue = 0
-    val mCallbackList = RemoteCallbackList<IRemoteServiceCallback>();
+    val mCallbackList = RemoteCallbackList<IRemoteServiceCallback>()
 
-    val mHandler = Handler(Looper.getMainLooper(), object : Handler.Callback {
-        override fun handleMessage(msg: Message): Boolean {
-            when (msg.what) {
-                msg_what -> {
-                    val tValue = mValue++
-                    Log.d(TAG, "increment value:$tValue")
-                    val broadcastSize = mCallbackList.beginBroadcast()
-                    for (i in 0..broadcastSize) {
-                        runCatching {
-                            mCallbackList.getBroadcastItem(i)?.valueChanged(tValue)
+    val mHandler = Handler(
+        Looper.getMainLooper(),
+        object : Handler.Callback {
+            override fun handleMessage(msg: Message): Boolean {
+                when (msg.what) {
+                    msgWhat -> {
+                        val tValue = mValue++
+                        Log.d(tag, "increment value:$tValue")
+                        val broadcastSize = mCallbackList.beginBroadcast()
+                        for (i in 0..broadcastSize) {
+                            runCatching {
+                                mCallbackList.getBroadcastItem(i)?.valueChanged(tValue)
+                            }
+                        }
+                        mCallbackList.finishBroadcast()
+                        msg.target.apply {
+                            sendMessageDelayed(obtainMessage(msgWhat), 1 * 1000)
                         }
                     }
-                    mCallbackList.finishBroadcast()
-                    msg.target.apply {
-                        sendMessageDelayed(obtainMessage(msg_what), 1 * 1000)
-                    }
-                }
 
-                else -> {}
+                    else -> {}
+                }
+                return true
             }
-            return true
         }
-    })
+    )
 
     private val mBinder = object : IRemoteService.Stub() {
         override fun registerCallback(cb: IRemoteServiceCallback?) {
@@ -54,12 +57,12 @@ class RemoteService : Service() {
 
     override fun onCreate() {
         super.onCreate()
-        Log.d(TAG, "---RemoteService onCreate")
-        mHandler.sendEmptyMessage(msg_what)
+        Log.d(tag, "---RemoteService onCreate")
+        mHandler.sendEmptyMessage(msgWhat)
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        Log.d(TAG, "---RemoteService onStartCommand")
+        Log.d(tag, "---RemoteService onStartCommand")
         return START_NOT_STICKY
     }
 
@@ -73,9 +76,8 @@ class RemoteService : Service() {
     }
 
     override fun onDestroy() {
-        Toast.makeText(this, "RemoteService Destroy!!!", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "RemoteService Destroy!!!", Toast.LENGTH_SHORT).show()
         mCallbackList.kill()
         mHandler.removeCallbacksAndMessages(null)
     }
-
 }

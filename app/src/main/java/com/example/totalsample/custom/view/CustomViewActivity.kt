@@ -12,6 +12,5 @@ class CustomViewActivity : BaseActivity<ActivityCustomViewBinding>() {
         vBinding.circleIv.setOnClickListener {
             Toast.makeText(this, "Show Circle ImageView!!!", Toast.LENGTH_SHORT).show()
         }
-
     }
 }

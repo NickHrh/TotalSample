@@ -16,51 +16,56 @@ import com.example.totalsample.databinding.ActivityIncrementBinding
 import com.example.totalsample.service.RemoteService
 
 class IncrementActivity : BaseActivity<ActivityIncrementBinding>() {
-    val bump_msg = 1
+    val bumpMsg = 1
     var mIsBound = false
-    val TAG = IncrementActivity::class.simpleName
+    val tag = IncrementActivity::class.simpleName
     private var mService: IRemoteService? = null
 
-    val mHandler = Handler(Looper.getMainLooper(), object : Callback {
-        override fun handleMessage(msg: Message): Boolean {
-            when (msg.what) {
-                bump_msg ->
-                    vBinding.tvContent.text = "Received from Service:${msg.arg1}"
+    val mHandler = Handler(
+        Looper.getMainLooper(),
+        object : Callback {
+            override fun handleMessage(msg: Message): Boolean {
+                when (msg.what) {
+                    bumpMsg ->
+                        vBinding.tvContent.text = "Received from Service:${msg.arg1}"
 
-                else -> {}
+                    else -> {}
+                }
+                return true
             }
-            return true
         }
-    })
+    )
 
     val mCallback = object : IRemoteServiceCallback.Stub() {
         override fun valueChanged(value: Int) {
-            mHandler.sendMessage(mHandler.obtainMessage(bump_msg, value, 0))
+            mHandler.sendMessage(mHandler.obtainMessage(bumpMsg, value, 0))
         }
     }
 
     val serviceCollection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-            Log.i(TAG, "---onServiceConnected")
+            Log.i(tag, "---onServiceConnected")
             vBinding.tvContent.text = "Attached!!!"
             mService = IRemoteService.Stub.asInterface(service)
             mService?.registerCallback(mCallback)
-
 
             Toast.makeText(this@IncrementActivity, "remote service connected", Toast.LENGTH_SHORT)
                 .show()
         }
 
         override fun onServiceDisconnected(name: ComponentName?) {
-            Log.i(TAG, "---onServiceDisconnected")
+            Log.i(tag, "---onServiceDisconnected")
 
             mService = null
             vBinding.tvContent.text = "disconnected!!!"
-            Toast.makeText(this@IncrementActivity, "remote service Disconnected", Toast.LENGTH_SHORT)
+            Toast.makeText(
+                this@IncrementActivity,
+                "remote service Disconnected",
+                Toast.LENGTH_SHORT
+            )
                 .show()
         }
     }
-
 
     @SuppressLint("ImplicitSamInstance")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -77,7 +82,7 @@ class IncrementActivity : BaseActivity<ActivityIncrementBinding>() {
             if (mIsBound) {
                 mService?.unregisterCallback(mCallback)
                 unbindService(serviceCollection)
-                mIsBound = false;
+                mIsBound = false
                 vBinding.tvContent.text = "Unbinded……"
             }
         }

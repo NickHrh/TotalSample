@@ -19,46 +19,46 @@ import kotlinx.coroutines.runBlocking
 class MessengerActivity : BaseActivity<ActivityMessagerBinding>() {
     var mValue = -1
     var mIsBound = false
-    val TAG = MessengerActivity::class.simpleName
+    val tag = MessengerActivity::class.simpleName
 
-    val messengerHandler = Handler(Looper.getMainLooper(), object : Handler.Callback {
-        override fun handleMessage(msg: Message): Boolean {
-            when (msg.what) {
-                2 -> {
-                    val value = msg.data.getInt("S2C")
-                    mValue = value
-                    viewBinding.tvMsgContent.text = "Received from Service:$mValue"
+    val messengerHandler = Handler(
+        Looper.getMainLooper(),
+        object : Handler.Callback {
+            override fun handleMessage(msg: Message): Boolean {
+                when (msg.what) {
+                    2 -> {
+                        val value = msg.data.getInt("S2C")
+                        mValue = value
+                        viewBinding.tvMsgContent.text = "Received from Service:$mValue"
 
-                    runBlocking {
-                        delay(1000)
-                        val sendMsg2Server = toServerMsg()
-                        messengerServer?.send(sendMsg2Server)
+                        runBlocking {
+                            delay(1000)
+                            val sendMsg2Server = toServerMsg()
+                            messengerServer?.send(sendMsg2Server)
+                        }
                     }
+
+                    else -> {}
                 }
 
-                else -> {}
+                return true
             }
-
-            return true
         }
-    })
+    )
 
     var messengerServer: Messenger? = null
     val clientMsger = Messenger(messengerHandler)
 
     val connection = object : ServiceConnection {
-        override fun onServiceConnected(
-            name: ComponentName?,
-            service: IBinder?
-        ) {
-            Log.i(TAG, "---onServiceConnected")
+        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+            Log.i(tag, "---onServiceConnected")
             messengerServer = Messenger(service)
             val sendMsg2Server = toServerMsg()
             messengerServer?.send(sendMsg2Server)
         }
 
         override fun onServiceDisconnected(name: ComponentName?) {
-            Log.i(TAG, "---onServiceDisconnected")
+            Log.i(tag, "---onServiceDisconnected")
             viewBinding.tvMsgContent.text = "disconnected!!!"
             Toast.makeText(
                 this@MessengerActivity,
@@ -67,7 +67,6 @@ class MessengerActivity : BaseActivity<ActivityMessagerBinding>() {
             ).show()
         }
     }
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -83,12 +82,11 @@ class MessengerActivity : BaseActivity<ActivityMessagerBinding>() {
                 unbindService(connection)
                 // 再清理本地消息队列，避免残留消息
                 messengerHandler.removeCallbacksAndMessages(null)
-                mIsBound = false;
+                mIsBound = false
                 viewBinding.tvMsgContent.text = "Unbinded……"
                 mValue = -1
             }
         }
-
     }
 
     private fun toServerMsg(): Message? {
