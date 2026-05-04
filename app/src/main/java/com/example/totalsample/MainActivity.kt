@@ -30,6 +30,9 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
                     Log.i(tag, "get the sum:$it")
                 }
             }
+            btnFive.setOnClickListener {
+                startActivity(Intent(this@MainActivity, NaviActivity::class.java))
+            }
         }
     }
 

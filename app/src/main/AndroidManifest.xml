@@ -27,6 +27,10 @@
         <activity
             android:name=".IncrementActivity"
             android:exported="false" />
+        <activity
+            android:name=".NaviActivity"
+            android:exported="false" />
+
 
         <service
             android:name=".service.RemoteService"
